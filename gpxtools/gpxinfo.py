@@ -127,15 +127,14 @@ def run(gpx_files: List[str], miles: bool, seconds: bool, only_track: bool) -> N
     for gpx_file in gpx_files:
         try:
             gpx = mod_gpxpy.parse(open(gpx_file))
-            info = print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
+            print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
         except Exception as e:
             mod_logging.exception(e)
             print('Error processing %s' % gpx_file)
             mod_sys.exit(1)
 
-    return info
 
-def main() -> None:
+def main():
     parser = mod_argparse.ArgumentParser(usage='%(prog)s [-s] [-m] [-d] [file ...]',
                                          description='Command line utility to extract basic statistics from gpx file(s)')
     parser.add_argument('-t', '--track', action='store_true', help='Only root track')
@@ -151,3 +150,5 @@ def main() -> None:
     if debug:
         mod_logging.basicConfig(level=mod_logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
     run(gpx_files=gpx_files, miles=miles, seconds=seconds, only_track=only_track)
+
+    return args, gpx_files

@@ -61,7 +61,7 @@ def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.G
 
     moving_data = gpx_part.get_moving_data()
     if moving_data:
-        print('%sMoving time: %s' % (indentation, format_time(moving_data.moving_time, seconds)))
+        print('%sMoving time(GIDS): %s' % (indentation, format_time(moving_data.moving_time, seconds)))
         print('%sStopped time: %s' % (indentation, format_time(moving_data.stopped_time, seconds)))
         #print('%sStopped distance: %s' % (indentation, format_short_length(stopped_distance)))
         print('%sMax speed: %s' % (indentation, format_speed(moving_data.max_speed, miles)))

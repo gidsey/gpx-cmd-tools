@@ -50,7 +50,8 @@ def format_speed(speed: float, miles: bool) -> str:
         return '{:.2f}m/s = {:.2f}km/h'.format(speed, speed * 3600. / 1000.)
 
 
-def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.GPXTrackSegment], indentation: str='    ', miles: bool = False, seconds: bool = False) -> None:
+def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.GPXTrackSegment],
+                        indentation: str = '    ', miles: bool = False, seconds: bool = False) -> None:
     """
     gpx_part may be a track or segment.
     """
@@ -63,9 +64,10 @@ def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.G
     if moving_data:
         print('%sMoving time(GIDS): %s' % (indentation, format_time(moving_data.moving_time, seconds)))
         print('%sStopped time: %s' % (indentation, format_time(moving_data.stopped_time, seconds)))
-        #print('%sStopped distance: %s' % (indentation, format_short_length(stopped_distance)))
+        # print('%sStopped distance: %s' % (indentation, format_short_length(stopped_distance)))
         print('%sMax speed: %s' % (indentation, format_speed(moving_data.max_speed, miles)))
-        print('%sAvg speed: %s' % (indentation, format_speed(moving_data.moving_distance / moving_data.moving_time, miles) if moving_data.moving_time > 0 else "?"))
+        print('%sAvg speed: %s' % (indentation, format_speed(moving_data.moving_distance / moving_data.moving_time,
+                                                             miles) if moving_data.moving_time > 0 else "?"))
 
     uphill, downhill = gpx_part.get_uphill_downhill()
     print('%sTotal uphill: %s' % (indentation, format_short_length(uphill, miles)))
@@ -86,7 +88,8 @@ def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.G
                 distance = point.distance_2d(previous_point)
                 distances.append(distance)
             previous_point = point
-        print('%sAvg distance between points: %s' % (indentation, format_short_length(sum(distances) / len(list(gpx_part.walk())), miles)))
+        print('%sAvg distance between points: %s' % (
+        indentation, format_short_length(sum(distances) / len(list(gpx_part.walk())), miles)))
 
     print('')
 
@@ -124,16 +127,17 @@ def run(gpx_files: List[str], miles: bool, seconds: bool, only_track: bool) -> N
     for gpx_file in gpx_files:
         try:
             gpx = mod_gpxpy.parse(open(gpx_file))
-            print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
+            info = print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
         except Exception as e:
             mod_logging.exception(e)
             print('Error processing %s' % gpx_file)
             mod_sys.exit(1)
 
+    return info
 
 def main() -> None:
     parser = mod_argparse.ArgumentParser(usage='%(prog)s [-s] [-m] [-d] [file ...]',
-        description='Command line utility to extract basic statistics from gpx file(s)')
+                                         description='Command line utility to extract basic statistics from gpx file(s)')
     parser.add_argument('-t', '--track', action='store_true', help='Only root track')
     parser.add_argument('-s', '--seconds', action='store_true', help='print times as N seconds, rather than HH:MM:SS')
     parser.add_argument('-m', '--miles', action='store_true', help='print distances and speeds using miles and feet')

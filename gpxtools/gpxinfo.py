@@ -51,7 +51,7 @@ def format_speed(speed: float, miles: bool) -> str:
 
 
 def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.GPXTrackSegment],
-                        indentation: str = '    ', miles: bool = False, seconds: bool = False) -> None:
+                        indentation: str = '    ', miles: bool = False, seconds: bool = False):
     """
     gpx_part may be a track or segment.
     """
@@ -62,7 +62,7 @@ def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.G
 
     moving_data = gpx_part.get_moving_data()
     if moving_data:
-        print('%sMoving time(GIDS): %s' % (indentation, format_time(moving_data.moving_time, seconds)))
+        print('%sMoving time (GIDS): %s' % (indentation, format_time(moving_data.moving_time, seconds)))
         print('%sStopped time: %s' % (indentation, format_time(moving_data.stopped_time, seconds)))
         # print('%sStopped distance: %s' % (indentation, format_short_length(stopped_distance)))
         print('%sMax speed: %s' % (indentation, format_speed(moving_data.max_speed, miles)))
@@ -92,6 +92,8 @@ def print_gpx_part_info(gpx_part: Union[mod_gpx.GPX, mod_gpx.GPXTrack, mod_gpx.G
         indentation, format_short_length(sum(distances) / len(list(gpx_part.walk())), miles)))
 
     print('')
+
+    return indentation, format_time(moving_data.moving_time, seconds)
 
 
 def print_gpx_info(gpx: mod_gpx.GPX, gpx_file: str, miles: bool, seconds: bool, only_track: bool) -> None:
@@ -128,7 +130,6 @@ def run(gpx_files: List[str], miles: bool, seconds: bool, only_track: bool) -> N
         try:
             gpx = mod_gpxpy.parse(open(gpx_file))
             print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
-            return print_gpx_info(gpx, gpx_file, miles, seconds, only_track)
         except Exception as e:
             mod_logging.exception(e)
             print('Error processing %s' % gpx_file)
